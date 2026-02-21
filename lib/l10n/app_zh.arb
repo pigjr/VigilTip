@@ -1,0 +1,48 @@
+{
+  "@@locale": "zh",
+  "appTitle": "VigilTip",
+  "homeHeadline": "扫描账单，获取小费建议",
+  "homeSubhead": "基于税前金额，多档取整建议，每档附理由",
+  "scanReceipt": "扫描账单",
+  "cameraPermissionDenied": "需要相机权限才能扫描账单",
+  "noCameraFound": "未找到相机",
+  "cameraInitFailed": "相机初始化失败: {description}",
+  "@cameraInitFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "captureFailed": "拍照失败: {description}",
+  "@captureFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "retry": "重试",
+  "back": "返回",
+  "processing": "处理中...",
+  "capture": "拍照",
+  "tipSuggestions": "小费建议",
+  "recognizingReceipt": "正在识别账单...",
+  "receiptNotRecognized": "无法识别账单，请重拍或确保光线充足",
+  "amountNotRecognized": "无法识别账单金额，请重拍或确保账单清晰",
+  "retake": "重拍",
+  "backToHome": "返回首页",
+  "receiptSummary": "账单摘要",
+  "subtotalPreTax": "税前小计",
+  "totalNoSubtotal": "总价（未识别到税前）",
+  "tax": "税",
+  "total": "合计",
+  "gratuityIncluded": "账单已包含小费/服务费",
+  "tipSuggestionsBasedOnPreTax": "小费建议（基于税前）",
+  "suggestion": "建议",
+  "scanAnotherReceipt": "扫描另一张账单",
+  "noTipReason": "账单已包含小费/服务费，通常无需再付小费",
+  "tipReason15": "标准服务，常规小费",
+  "tipReason18": "服务满意，略高于常规",
+  "tipReason20": "服务出色，表示感谢"
+}

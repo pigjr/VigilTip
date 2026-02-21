@@ -1,0 +1,48 @@
+{
+  "@@locale": "en",
+  "appTitle": "VigilTip",
+  "homeHeadline": "Scan a receipt, get tip suggestions",
+  "homeSubhead": "Based on pre-tax amount, rounded options with a reason for each",
+  "scanReceipt": "Scan receipt",
+  "cameraPermissionDenied": "Camera permission is required to scan receipts",
+  "noCameraFound": "No camera found",
+  "cameraInitFailed": "Camera failed to start: {description}",
+  "@cameraInitFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "captureFailed": "Capture failed: {description}",
+  "@captureFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "retry": "Retry",
+  "back": "Back",
+  "processing": "Processing...",
+  "capture": "Capture",
+  "tipSuggestions": "Tip suggestions",
+  "recognizingReceipt": "Recognizing receipt...",
+  "receiptNotRecognized": "Could not read the receipt. Try again or ensure good lighting.",
+  "amountNotRecognized": "Could not read amounts. Try again or ensure the receipt is clear.",
+  "retake": "Retake",
+  "backToHome": "Back to home",
+  "receiptSummary": "Receipt summary",
+  "subtotalPreTax": "Subtotal (pre-tax)",
+  "totalNoSubtotal": "Total (no subtotal found)",
+  "tax": "Tax",
+  "total": "Total",
+  "gratuityIncluded": "Bill already includes tip or service charge",
+  "tipSuggestionsBasedOnPreTax": "Tip suggestions (based on pre-tax)",
+  "suggestion": "Suggestion",
+  "scanAnotherReceipt": "Scan another receipt",
+  "noTipReason": "Bill already includes tip or service charge; no need to add more.",
+  "tipReason15": "Standard service, usual tip",
+  "tipReason18": "Good service, slightly above usual",
+  "tipReason20": "Excellent service, thank you"
+}

@@ -1,0 +1,48 @@
+{
+  "@@locale": "fr",
+  "appTitle": "VigilTip",
+  "homeHeadline": "Scannez une note, obtenez des suggestions de pourboire",
+  "homeSubhead": "Sur la base du montant hors taxes, options arrondies avec une raison pour chaque",
+  "scanReceipt": "Scanner la note",
+  "cameraPermissionDenied": "L'accès à la caméra est nécessaire pour scanner les notes",
+  "noCameraFound": "Aucune caméra trouvée",
+  "cameraInitFailed": "Échec du démarrage de la caméra : {description}",
+  "@cameraInitFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "captureFailed": "Échec de la prise : {description}",
+  "@captureFailed": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "retry": "Réessayer",
+  "back": "Retour",
+  "processing": "Traitement...",
+  "capture": "Prendre",
+  "tipSuggestions": "Suggestions de pourboire",
+  "recognizingReceipt": "Reconnaissance de la note...",
+  "receiptNotRecognized": "Impossible de lire la note. Réessayez ou assurez un bon éclairage.",
+  "amountNotRecognized": "Impossible de lire les montants. Réessayez ou assurez que la note est lisible.",
+  "retake": "Reprendre",
+  "backToHome": "Retour à l'accueil",
+  "receiptSummary": "Résumé de la note",
+  "subtotalPreTax": "Sous-total (hors taxes)",
+  "totalNoSubtotal": "Total (sous-total non trouvé)",
+  "tax": "Taxes",
+  "total": "Total",
+  "gratuityIncluded": "La note inclut déjà le pourboire ou le service",
+  "tipSuggestionsBasedOnPreTax": "Suggestions de pourboire (sur base hors taxes)",
+  "suggestion": "Suggestion",
+  "scanAnotherReceipt": "Scanner une autre note",
+  "noTipReason": "La note inclut déjà le pourboire ou le service ; pas besoin d'ajouter.",
+  "tipReason15": "Service standard, pourboire habituel",
+  "tipReason18": "Bon service, un peu au-dessus de l'habituel",
+  "tipReason20": "Excellent service, merci"
+}
