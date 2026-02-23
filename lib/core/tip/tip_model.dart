@@ -7,23 +7,26 @@ class TipOption {
   });
 
   final int percentage;
-  final int amount;
-  /// Localization key (e.g. tipReason15) for the reason string.
+  final double amount;
+  /// Localization key (e.g. tipReasonLow) for the reason string.
   final String reasonKey;
 }
 
 /// Result of tip engine: either "no tip" (gratuity included) or list of options.
 class TipResult {
-  const TipResult.noTip({required this.reasonKey})
+  const TipResult.noTip({required this.reasonKey, this.serviceChargeAmount})
       : isGratuityIncluded = true,
         options = const [];
 
   const TipResult.options({required this.options})
       : isGratuityIncluded = false,
-        reasonKey = null;
+        reasonKey = null,
+        serviceChargeAmount = null;
 
   final bool isGratuityIncluded;
   /// Localization key for no-tip reason (e.g. noTipReason).
   final String? reasonKey;
   final List<TipOption> options;
+  /// The detected service charge amount, if any.
+  final double? serviceChargeAmount;
 }

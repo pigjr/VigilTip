@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../gen_l10n/app_localizations.dart';
@@ -19,21 +22,32 @@ class _CameraPageState extends State<CameraPage> {
   List<CameraDescription>? _cameras;
   String? _error;
   bool _isCapturing = false;
+  bool _showManualInput = false;
+  final TextEditingController _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    // 锁定竖向方向
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     _initCamera();
   }
 
   Future<void> _initCamera() async {
-    final status = await Permission.camera.request();
-    if (!mounted) return;
-    if (!status.isGranted) {
-      setState(() {
-        _error = AppLocalizations.of(context)!.cameraPermissionDenied;
-      });
-      return;
+    try {
+      final status = await Permission.camera.request();
+      if (!mounted) return;
+      if (!status.isGranted) {
+        setState(() {
+          _error = AppLocalizations.of(context)!.cameraPermissionDenied;
+        });
+        return;
+      }
+    } on MissingPluginException {
+      // permission_handler not implemented on this platform (e.g. Linux, Windows, web); proceed without it.
     }
     try {
       _cameras = await availableCameras();
@@ -56,6 +70,12 @@ class _CameraPageState extends State<CameraPage> {
       );
       await _controller!.initialize();
       if (mounted) setState(() {});
+    } on MissingPluginException {
+      if (mounted) {
+        setState(() {
+          _error = AppLocalizations.of(context)!.cameraNotSupportedOnPlatform;
+        });
+      }
     } on CameraException catch (e) {
       if (mounted) {
         setState(() {
@@ -67,6 +87,8 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   void dispose() {
+    // 恢复所有方向
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _controller?.dispose();
     super.dispose();
   }
@@ -84,9 +106,66 @@ class _CameraPageState extends State<CameraPage> {
           _error = AppLocalizations.of(context)!.captureFailed(e.description ?? '');
         });
       }
+    } catch (e) {
+      debugPrint('Capture error: $e');
+      // Filter out known device-specific errors that don't affect functionality
+      if (e.toString().contains('com.oplus.statistics.provider') ||
+          e.toString().contains('OplusStatistics')) {
+        debugPrint('Ignoring OnePlus/Oppo statistics provider error (device-specific, non-critical)');
+      } else {
+        if (mounted) {
+          setState(() {
+            _error = AppLocalizations.of(context)!.captureFailed('Unexpected error occurred');
+          });
+        }
+      }
     } finally {
       if (mounted) setState(() => _isCapturing = false);
     }
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final picker = ImagePicker();
+      final xFile = await picker.pickImage(source: ImageSource.gallery);
+      if (!mounted) return;
+      if (xFile == null) return;
+      final path = xFile.path;
+      if (path.isNotEmpty) {
+        context.go('/result', extra: path);
+      }
+    } on MissingPluginException {
+      if (mounted) {
+        setState(() {
+          _error = AppLocalizations.of(context)!.cameraNotSupportedOnPlatform;
+        });
+      }
+    }
+  }
+
+  void _submitManualAmount() {
+    final amountText = _amountController.text.trim();
+    if (amountText.isEmpty) return;
+    
+    final amount = double.tryParse(amountText);
+    if (amount == null || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('请输入有效的金额')),
+      );
+      return;
+    }
+    
+    // Create a manual receipt data and navigate to result
+    context.go('/result', extra: {'manual': true, 'amount': amount});
+  }
+
+  void _toggleManualInput() {
+    setState(() {
+      _showManualInput = !_showManualInput;
+      if (!_showManualInput) {
+        _amountController.clear();
+      }
+    });
   }
 
   @override
@@ -102,15 +181,19 @@ class _CameraPageState extends State<CameraPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(_error!, textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                FilledButton(
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.photo_library),
+                  label: Text(l10n.pickImageFromGallery),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
                   onPressed: () => _initCamera(),
                   child: Text(l10n.retry),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(l10n.back),
                 ),
               ],
             ),
@@ -121,43 +204,150 @@ class _CameraPageState extends State<CameraPage> {
 
     if (_controller == null || !_controller!.value.isInitialized) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.scanReceipt)),
+        appBar: AppBar(
+          title: Text(l10n.scanReceipt),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.photo_library),
+              onPressed: _pickImage,
+              tooltip: l10n.pickImageFromGallery,
+            ),
+          ],
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.scanReceipt)),
+      appBar: AppBar(
+        title: Text(l10n.scanReceipt),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.photo_library),
+            onPressed: _pickImage,
+            tooltip: l10n.pickImageFromGallery,
+          ),
+        ],
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
           Center(
-            child: AspectRatio(
-              aspectRatio: _controller!.value.aspectRatio,
-              child: CameraPreview(_controller!),
-            ),
-          ),
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: FilledButton.icon(
-                  onPressed: _isCapturing ? null : _capture,
-                  icon: _isCapturing
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.camera_alt),
-                  label: Text(_isCapturing ? l10n.processing : l10n.capture),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            child: ClipRect(
+              child: AspectRatio(
+                aspectRatio: 9 / 16, // 强制竖向比例
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller!.value.previewSize!.height,
+                    height: _controller!.value.previewSize!.width,
+                    child: CameraPreview(_controller!),
                   ),
                 ),
               ),
             ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(),
+                if (_showManualInput) _buildManualInputSection(),
+                _buildCaptureButton(l10n),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCaptureButton(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FilledButton.icon(
+            onPressed: _isCapturing ? null : _capture,
+            icon: _isCapturing
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.camera_alt),
+            label: Text(_isCapturing ? l10n.processing : l10n.capture),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              minimumSize: const Size(double.infinity, 48),
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (!_showManualInput)
+            FilledButton.icon(
+              onPressed: _toggleManualInput,
+              icon: const Icon(Icons.edit),
+              label: const Text('手动输入金额'),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildManualInputSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '手动输入账单金额',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _amountController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: '金额',
+              prefixText: '\$',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            autofocus: true,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: _submitManualAmount,
+                  icon: const Icon(Icons.calculate),
+                  label: const Text('计算小费'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              TextButton.icon(
+                onPressed: _toggleManualInput,
+                icon: const Icon(Icons.close),
+                label: const Text('取消'),
+                style: TextButton.styleFrom(foregroundColor: Colors.grey),
+              ),
+            ],
           ),
         ],
       ),

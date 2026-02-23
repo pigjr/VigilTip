@@ -30,6 +30,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noCameraFound => 'Aucune caméra trouvée';
 
   @override
+  String get cameraNotSupportedOnPlatform =>
+      'La caméra n\'est pas prise en charge sur cette plateforme. Utilisez un appareil Android pour scanner les notes.';
+
+  @override
   String cameraInitFailed(String description) {
     return 'Échec du démarrage de la caméra : $description';
   }
@@ -50,6 +54,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get capture => 'Prendre';
+
+  @override
+  String get pickImageFromGallery => 'Choisir depuis la galerie';
 
   @override
   String get tipSuggestions => 'Suggestions de pourboire';
@@ -105,11 +112,18 @@ class AppLocalizationsFr extends AppLocalizations {
       'La note inclut déjà le pourboire ou le service ; pas besoin d\'ajouter.';
 
   @override
-  String get tipReason15 => 'Service standard, pourboire habituel';
+  String get tipReasonLow => 'Environ 5% de pourboire, total arrondi';
 
   @override
-  String get tipReason18 => 'Bon service, un peu au-dessus de l\'habituel';
+  String get tipReasonMedium => 'Environ 10% de pourboire, total arrondi';
 
   @override
-  String get tipReason20 => 'Excellent service, merci';
+  String get tipReasonHigh => 'Environ 15% de pourboire, total arrondi';
+
+  @override
+  String get disclaimerTitle => 'Avis Important';
+
+  @override
+  String get disclaimerText =>
+      'Les suggestions de pourboire suivantes sont à titre de référence uniquement. Cette application n\'assume aucune responsabilité légale. Veuillez décider des montants de pourboire en fonction de la qualité réelle du service.';
 }

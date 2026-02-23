@@ -29,6 +29,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noCameraFound => 'No camera found';
 
   @override
+  String get cameraNotSupportedOnPlatform =>
+      'Camera is not supported on this platform. Use an Android device to scan receipts.';
+
+  @override
   String cameraInitFailed(String description) {
     return 'Camera failed to start: $description';
   }
@@ -49,6 +53,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get capture => 'Capture';
+
+  @override
+  String get pickImageFromGallery => 'Pick from gallery';
 
   @override
   String get tipSuggestions => 'Tip suggestions';
@@ -103,11 +110,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Bill already includes tip or service charge; no need to add more.';
 
   @override
-  String get tipReason15 => 'Standard service, usual tip';
+  String get tipReasonLow => 'About 5% tip, rounded total';
 
   @override
-  String get tipReason18 => 'Good service, slightly above usual';
+  String get tipReasonMedium => 'About 10% tip, rounded total';
 
   @override
-  String get tipReason20 => 'Excellent service, thank you';
+  String get tipReasonHigh => 'About 15% tip, rounded total';
+
+  @override
+  String get disclaimerTitle => 'Important Notice';
+
+  @override
+  String get disclaimerText =>
+      'The following tip suggestions are for reference only. This app assumes no legal liability. Please decide tip amounts based on actual service quality.';
 }

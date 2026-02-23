@@ -27,6 +27,18 @@ Build APK:
 flutter build apk
 ```
 
+## Pushing to GitHub
+
+1. On [GitHub](https://github.com/new), create a new repository (e.g. `VigilTip`). Do **not** add a README, .gitignore, or license (the project already has them).
+2. In this project directory, add the remote and push:
+
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/VigilTip.git
+git push -u origin main
+```
+
+Replace `YOUR_USERNAME` with your GitHub username. If you use SSH: `git@github.com:YOUR_USERNAME/VigilTip.git`.
+
 ## Project structure
 
 - `lib/features/home/` – Home with "Scan receipt" entry.

@@ -27,6 +27,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noCameraFound => '未找到相机';
 
   @override
+  String get cameraNotSupportedOnPlatform => '当前平台不支持相机，请使用 Android 设备扫描账单。';
+
+  @override
   String cameraInitFailed(String description) {
     return '相机初始化失败: $description';
   }
@@ -47,6 +50,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get capture => '拍照';
+
+  @override
+  String get pickImageFromGallery => '从相册选择';
 
   @override
   String get tipSuggestions => '小费建议';
@@ -97,11 +103,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noTipReason => '账单已包含小费/服务费，通常无需再付小费';
 
   @override
-  String get tipReason15 => '标准服务，常规小费';
+  String get tipReasonLow => '约5%小费，凑整支付';
 
   @override
-  String get tipReason18 => '服务满意，略高于常规';
+  String get tipReasonMedium => '约10%小费，凑整支付';
 
   @override
-  String get tipReason20 => '服务出色，表示感谢';
+  String get tipReasonHigh => '约15%小费，凑整支付';
+
+  @override
+  String get disclaimerTitle => '重要提示';
+
+  @override
+  String get disclaimerText => '以下小费建议仅供参考，本应用不承担任何法律责任。请根据实际服务质量自行决定小费金额。';
 }

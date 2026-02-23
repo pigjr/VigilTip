@@ -6,6 +6,7 @@
   "scanReceipt": "Scan receipt",
   "cameraPermissionDenied": "Camera permission is required to scan receipts",
   "noCameraFound": "No camera found",
+  "cameraNotSupportedOnPlatform": "Camera is not supported on this platform. Use an Android device to scan receipts.",
   "cameraInitFailed": "Camera failed to start: {description}",
   "@cameraInitFailed": {
     "placeholders": {
@@ -26,6 +27,7 @@
   "back": "Back",
   "processing": "Processing...",
   "capture": "Capture",
+  "pickImageFromGallery": "Pick from gallery",
   "tipSuggestions": "Tip suggestions",
   "recognizingReceipt": "Recognizing receipt...",
   "receiptNotRecognized": "Could not read the receipt. Try again or ensure good lighting.",
@@ -42,7 +44,9 @@
   "suggestion": "Suggestion",
   "scanAnotherReceipt": "Scan another receipt",
   "noTipReason": "Bill already includes tip or service charge; no need to add more.",
-  "tipReason15": "Standard service, usual tip",
-  "tipReason18": "Good service, slightly above usual",
-  "tipReason20": "Excellent service, thank you"
+  "tipReasonLow": "About 5% tip, rounded total",
+  "tipReasonMedium": "About 10% tip, rounded total",
+  "tipReasonHigh": "About 15% tip, rounded total",
+  "disclaimerTitle": "Important Notice",
+  "disclaimerText": "The following tip suggestions are for reference only. This app assumes no legal liability. Please decide tip amounts based on actual service quality."
 }

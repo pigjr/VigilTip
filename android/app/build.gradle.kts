@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "app.vigiltip.vigiltip"
-        minSdk = 21
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

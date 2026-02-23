@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'No camera found'**
   String get noCameraFound;
 
+  /// No description provided for @cameraNotSupportedOnPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera is not supported on this platform. Use an Android device to scan receipts.'**
+  String get cameraNotSupportedOnPlatform;
+
   /// No description provided for @cameraInitFailed.
   ///
   /// In en, this message translates to:
@@ -171,6 +177,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Capture'**
   String get capture;
+
+  /// No description provided for @pickImageFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from gallery'**
+  String get pickImageFromGallery;
 
   /// No description provided for @tipSuggestions.
   ///
@@ -268,23 +280,35 @@ abstract class AppLocalizations {
   /// **'Bill already includes tip or service charge; no need to add more.'**
   String get noTipReason;
 
-  /// No description provided for @tipReason15.
+  /// No description provided for @tipReasonLow.
   ///
   /// In en, this message translates to:
-  /// **'Standard service, usual tip'**
-  String get tipReason15;
+  /// **'About 5% tip, rounded total'**
+  String get tipReasonLow;
 
-  /// No description provided for @tipReason18.
+  /// No description provided for @tipReasonMedium.
   ///
   /// In en, this message translates to:
-  /// **'Good service, slightly above usual'**
-  String get tipReason18;
+  /// **'About 10% tip, rounded total'**
+  String get tipReasonMedium;
 
-  /// No description provided for @tipReason20.
+  /// No description provided for @tipReasonHigh.
   ///
   /// In en, this message translates to:
-  /// **'Excellent service, thank you'**
-  String get tipReason20;
+  /// **'About 15% tip, rounded total'**
+  String get tipReasonHigh;
+
+  /// No description provided for @disclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Notice'**
+  String get disclaimerTitle;
+
+  /// No description provided for @disclaimerText.
+  ///
+  /// In en, this message translates to:
+  /// **'The following tip suggestions are for reference only. This app assumes no legal liability. Please decide tip amounts based on actual service quality.'**
+  String get disclaimerText;
 }
 
 class _AppLocalizationsDelegate

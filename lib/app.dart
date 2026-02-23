@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/camera/camera_page.dart';
-import 'features/home/home_page.dart';
 import 'features/result/result_page.dart';
 import 'gen_l10n/app_localizations.dart';
 
@@ -12,33 +11,44 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (_, __) => const HomePage(),
-    ),
-    GoRoute(
-      path: '/camera',
       builder: (_, __) => const CameraPage(),
     ),
     GoRoute(
       path: '/result',
       builder: (context, state) {
-        final path = state.extra as String?;
-        if (path == null || path.isEmpty) {
-          return const _RedirectToHome();
+        final extra = state.extra;
+        if (extra is String) {
+          // Image path from camera/gallery
+          if (extra.isEmpty) {
+            return const _RedirectToScan();
+          }
+          return ResultPage(imagePath: extra);
+        } else if (extra is Map<String, dynamic>) {
+          // Manual input
+          final isManual = extra['manual'] as bool? ?? false;
+          final amount = extra['amount'] as double?;
+          if (isManual && amount != null) {
+            return ResultPage(
+              imagePath: '', // Dummy path for manual input
+              isManual: true,
+              manualAmount: amount,
+            );
+          }
         }
-        return ResultPage(imagePath: path);
+        return const _RedirectToScan();
       },
     ),
   ],
 );
 
-class _RedirectToHome extends StatefulWidget {
-  const _RedirectToHome();
+class _RedirectToScan extends StatefulWidget {
+  const _RedirectToScan();
 
   @override
-  State<_RedirectToHome> createState() => _RedirectToHomeState();
+  State<_RedirectToScan> createState() => _RedirectToScanState();
 }
 
-class _RedirectToHomeState extends State<_RedirectToHome> {
+class _RedirectToScanState extends State<_RedirectToScan> {
   @override
   void initState() {
     super.initState();

@@ -11,12 +11,12 @@ import '../../gen_l10n/app_localizations.dart';
 /// Resolves tip reason key to localized string.
 String _tipReasonText(AppLocalizations l10n, String reasonKey) {
   switch (reasonKey) {
-    case 'tipReason15':
-      return l10n.tipReason15;
-    case 'tipReason18':
-      return l10n.tipReason18;
-    case 'tipReason20':
-      return l10n.tipReason20;
+    case 'tipReasonLow':
+      return l10n.tipReasonLow;
+    case 'tipReasonMedium':
+      return l10n.tipReasonMedium;
+    case 'tipReasonHigh':
+      return l10n.tipReasonHigh;
     case 'noTipReason':
       return l10n.noTipReason;
     default:
@@ -37,9 +37,11 @@ String _errorText(AppLocalizations l10n, String errorKey) {
 }
 
 class ResultPage extends StatefulWidget {
-  const ResultPage({super.key, required this.imagePath});
-
+  const ResultPage({super.key, required this.imagePath, this.isManual = false, this.manualAmount});
+  
   final String imagePath;
+  final bool isManual;
+  final double? manualAmount;
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -55,6 +57,7 @@ class _ResultPageState extends State<ResultPage> {
   /// Error key for l10n (receiptNotRecognized, amountNotRecognized).
   String? _errorKey;
   bool _loading = true;
+  bool _cancelled = false;
 
   @override
   void initState() {
@@ -69,36 +72,105 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Future<void> _process() async {
+    debugPrint('=== Result Processing Started ===');
     setState(() {
       _loading = true;
       _errorKey = null;
       _receipt = null;
       _tipResult = null;
+      _cancelled = false;
     });
+    
+    // Handle manual input
+    if (widget.isManual && widget.manualAmount != null) {
+      debugPrint('Processing manual amount: ${widget.manualAmount}');
+      _processManualAmount(widget.manualAmount!);
+      return;
+    }
+    
+    debugPrint('Starting OCR recognition from: ${widget.imagePath}');
     final lines = await _ocr.recognizeFromFile(widget.imagePath);
+    
     if (!mounted) return;
+    if (_cancelled) {
+      debugPrint('Processing was cancelled');
+      return;
+    }
+    
+    debugPrint('OCR returned ${lines.length} lines');
+    
     if (lines.isEmpty) {
+      debugPrint('No text lines found, setting receiptNotRecognized error');
       setState(() {
         _loading = false;
         _errorKey = 'receiptNotRecognized';
       });
       return;
     }
+    
+    debugPrint('Starting receipt parsing...');
     final receipt = _parser.parse(lines);
+    debugPrint('Parsed receipt: $receipt');
+    
+    debugPrint('Starting tip calculation...');
     final tipResult = _tipEngine.compute(receipt);
+    debugPrint('Tip result: $tipResult');
+    
     if (!mounted) return;
+    if (_cancelled) {
+      debugPrint('Processing was cancelled after parsing');
+      return;
+    }
+    
     if (!receipt.hasAmounts) {
+      debugPrint('No amounts found in receipt, setting amountNotRecognized error');
       setState(() {
         _loading = false;
         _errorKey = 'amountNotRecognized';
       });
       return;
     }
+    
+    debugPrint('Processing completed successfully');
     setState(() {
       _loading = false;
       _receipt = receipt;
       _tipResult = tipResult;
     });
+    debugPrint('=== Result Processing Completed ===');
+  }
+
+  void _processManualAmount(double amount) {
+    debugPrint('Creating manual receipt data for amount: $amount');
+    
+    // Create a manual receipt with the entered amount as total
+    final receipt = ReceiptData(
+      subtotal: amount,
+      tax: null,
+      total: amount,
+      hasGratuityOrServiceCharge: false,
+      rawLines: ['手动输入金额: \$$amount'],
+    );
+    
+    // Calculate tip suggestions
+    final tipResult = _tipEngine.compute(receipt);
+    
+    setState(() {
+      _loading = false;
+      _receipt = receipt;
+      _tipResult = tipResult;
+    });
+    
+    debugPrint('Manual amount processing completed');
+  }
+
+  void _cancelProcessing() {
+    debugPrint('User cancelled processing');
+    setState(() {
+      _cancelled = true;
+      _loading = false;
+    });
+    context.go('/');
   }
 
   @override
@@ -107,7 +179,17 @@ class _ResultPageState extends State<ResultPage> {
 
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.tipSuggestions)),
+        appBar: AppBar(
+          title: Text(l10n.tipSuggestions),
+          actions: [
+            TextButton.icon(
+              onPressed: _cancelProcessing,
+              icon: const Icon(Icons.cancel),
+              label: const Text('取消'),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+            ),
+          ],
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -115,6 +197,18 @@ class _ResultPageState extends State<ResultPage> {
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
               Text(l10n.recognizingReceipt),
+              const SizedBox(height: 8),
+              const Text(
+                '正在识别账单内容，请稍候...',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 24),
+              TextButton.icon(
+                onPressed: _cancelProcessing,
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('返回拍照'),
+                style: TextButton.styleFrom(foregroundColor: Colors.grey),
+              ),
             ],
           ),
         ),
@@ -135,7 +229,7 @@ class _ResultPageState extends State<ResultPage> {
                 Text(_errorText(l10n, _errorKey!), textAlign: TextAlign.center),
                 const SizedBox(height: 24),
                 FilledButton.icon(
-                  onPressed: () => context.go('/camera'),
+                  onPressed: () => context.go('/'),
                   icon: const Icon(Icons.camera_alt),
                   label: Text(l10n.retake),
                 ),
@@ -161,15 +255,17 @@ class _ResultPageState extends State<ResultPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _ReceiptSummary(receipt: receipt),
+            _ReceiptSummary(receipt: receipt, rawLines: receipt.rawLines),
             const SizedBox(height: 24),
+            _DisclaimerCard(),
+            const SizedBox(height: 16),
             if (tipResult.isGratuityIncluded)
-              _NoTipCard(reasonKey: tipResult.reasonKey!)
+              _NoTipCard(reasonKey: tipResult.reasonKey!, serviceChargeAmount: tipResult.serviceChargeAmount)
             else
-              _TipOptionsList(options: tipResult.options),
+              _TipOptionsList(options: tipResult.options, baseAmount: receipt.tipBase),
             const SizedBox(height: 24),
             OutlinedButton.icon(
-              onPressed: () => context.go('/camera'),
+              onPressed: () => context.go('/'),
               icon: const Icon(Icons.camera_alt),
               label: Text(l10n.scanAnotherReceipt),
             ),
@@ -180,10 +276,72 @@ class _ResultPageState extends State<ResultPage> {
   }
 }
 
+class _DisclaimerCard extends StatelessWidget {
+  const _DisclaimerCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.errorContainer.withOpacity(0.8),
+            theme.colorScheme.errorContainer.withOpacity(0.6),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.error.withOpacity(0.3),
+          width: 2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: theme.colorScheme.error,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.disclaimerTitle,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.disclaimerText,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onErrorContainer,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ReceiptSummary extends StatelessWidget {
-  const _ReceiptSummary({required this.receipt});
+  const _ReceiptSummary({required this.receipt, required this.rawLines});
 
   final ReceiptData receipt;
+  final List<String> rawLines;
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +371,77 @@ class _ReceiptSummary extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
                 ),
               ),
+            if (rawLines.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              ExpansionTile(
+                leading: Icon(Icons.visibility, size: 20),
+                title: Text(
+                  '查看识别的原始文本',
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                ),
+                subtitle: Text(
+                  '共 ${rawLines.length} 行文本',
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
+                ),
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'OCR 识别结果：',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...rawLines.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final line = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${index + 1}:',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.outline,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    line.isEmpty ? '[空行]' : line,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      fontFamily: 'monospace',
+                                      color: line.isEmpty 
+                                          ? theme.colorScheme.outline 
+                                          : theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -248,9 +477,10 @@ class _SummaryRow extends StatelessWidget {
 }
 
 class _NoTipCard extends StatelessWidget {
-  const _NoTipCard({required this.reasonKey});
+  const _NoTipCard({required this.reasonKey, this.serviceChargeAmount});
 
   final String reasonKey;
+  final double? serviceChargeAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -271,6 +501,70 @@ class _NoTipCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(_tipReasonText(l10n, reasonKey)),
+            if (serviceChargeAmount != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.receipt_long,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          '账单已包含服务费',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '服务费金额',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
+                          ),
+                          Text(
+                            '\$${serviceChargeAmount!.toStringAsFixed(2)}',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -279,29 +573,157 @@ class _NoTipCard extends StatelessWidget {
 }
 
 class _TipOptionsList extends StatelessWidget {
-  const _TipOptionsList({required this.options});
+  const _TipOptionsList({required this.options, required this.baseAmount});
 
   final List<TipOption> options;
+  final double baseAmount;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final hasHighTipWarning = options.isNotEmpty && options.first.amount > 20.0;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.tipSuggestionsBasedOnPreTax, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
+        if (hasHighTipWarning) _buildHighTipWarning(context),
         ...options.map(
           (o) => Card(
             margin: const EdgeInsets.only(bottom: 8),
-            child: ListTile(
-              title: Text('${r'$'}${o.amount}（${o.percentage}%）'),
-              subtitle: Text(_tipReasonText(l10n, o.reasonKey)),
-              trailing: const Icon(Icons.chevron_right),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${o.amount.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${o.percentage}% 税前',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline, size: 16, color: Theme.of(context).colorScheme.outline),
+                      const SizedBox(width: 4),
+                      Text(
+                        _tipReasonText(l10n, o.reasonKey),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '总计支付',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          '\$${(baseAmount + o.amount).toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildHighTipWarning(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.errorContainer.withOpacity(0.8),
+            Theme.of(context).colorScheme.errorContainer.withOpacity(0.6),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+          width: 2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Theme.of(context).colorScheme.error,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '小费金额较高',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '最低档小费已超过 \$20，请检查账单金额是否正确，或考虑手动输入准确的金额。',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onErrorContainer,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

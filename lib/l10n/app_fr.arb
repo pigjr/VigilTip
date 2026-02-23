@@ -6,6 +6,7 @@
   "scanReceipt": "Scanner la note",
   "cameraPermissionDenied": "L'accès à la caméra est nécessaire pour scanner les notes",
   "noCameraFound": "Aucune caméra trouvée",
+  "cameraNotSupportedOnPlatform": "La caméra n'est pas prise en charge sur cette plateforme. Utilisez un appareil Android pour scanner les notes.",
   "cameraInitFailed": "Échec du démarrage de la caméra : {description}",
   "@cameraInitFailed": {
     "placeholders": {
@@ -26,6 +27,7 @@
   "back": "Retour",
   "processing": "Traitement...",
   "capture": "Prendre",
+  "pickImageFromGallery": "Choisir depuis la galerie",
   "tipSuggestions": "Suggestions de pourboire",
   "recognizingReceipt": "Reconnaissance de la note...",
   "receiptNotRecognized": "Impossible de lire la note. Réessayez ou assurez un bon éclairage.",
@@ -42,7 +44,9 @@
   "suggestion": "Suggestion",
   "scanAnotherReceipt": "Scanner une autre note",
   "noTipReason": "La note inclut déjà le pourboire ou le service ; pas besoin d'ajouter.",
-  "tipReason15": "Service standard, pourboire habituel",
-  "tipReason18": "Bon service, un peu au-dessus de l'habituel",
-  "tipReason20": "Excellent service, merci"
+  "tipReasonLow": "Environ 5% de pourboire, total arrondi",
+  "tipReasonMedium": "Environ 10% de pourboire, total arrondi",
+  "tipReasonHigh": "Environ 15% de pourboire, total arrondi",
+  "disclaimerTitle": "Avis Important",
+  "disclaimerText": "Les suggestions de pourboire suivantes sont à titre de référence uniquement. Cette application n'assume aucune responsabilité légale. Veuillez décider des montants de pourboire en fonction de la qualité réelle du service."
 }
