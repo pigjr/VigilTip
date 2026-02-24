@@ -309,6 +309,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The following tip suggestions are for reference only. This app assumes no legal liability. Please decide tip amounts based on actual service quality.'**
   String get disclaimerText;
+
+  /// No description provided for @appMotto.
+  ///
+  /// In en, this message translates to:
+  /// **'Think before you act'**
+  String get appMotto;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @dataCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Collection'**
+  String get dataCollection;
+
+  /// No description provided for @dataCollectionContent.
+  ///
+  /// In en, this message translates to:
+  /// **'VigilTip only collects the following information when you actively use the app:\n\n• Camera permission: To capture receipt photos\n• Image data: Processed locally, not uploaded to servers\n• Device information: App version and system info (for service improvement)'**
+  String get dataCollectionContent;
+
+  /// No description provided for @dataUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Usage'**
+  String get dataUsage;
+
+  /// No description provided for @dataUsageContent.
+  ///
+  /// In en, this message translates to:
+  /// **'We use collected data solely for:\n\n• Receipt text recognition (local processing)\n• Tip calculation (local processing)\n• App feature improvement\n• Error diagnosis and fixes'**
+  String get dataUsageContent;
+
+  /// No description provided for @dataStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Storage'**
+  String get dataStorage;
+
+  /// No description provided for @dataStorageContent.
+  ///
+  /// In en, this message translates to:
+  /// **'• All image processing is completed locally\n• We do not store your receipt photos\n• No personal data is uploaded to the cloud\n• App settings are saved only on your local device'**
+  String get dataStorageContent;
+
+  /// No description provided for @userRights.
+  ///
+  /// In en, this message translates to:
+  /// **'User Rights'**
+  String get userRights;
+
+  /// No description provided for @userRightsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to:\n\n• Access this privacy policy at any time\n• Deny camera permission (but this affects core functionality)\n• Uninstall the app to delete all local data\n• Contact us with privacy-related questions'**
+  String get userRightsContent;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contactUs;
+
+  /// No description provided for @contactUsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'For privacy-related questions, please contact us through:\n\n• Email: privacy@vigiltip.app\n• In-app feedback: Settings page\n\nWe will respond to your inquiries as soon as possible.'**
+  String get contactUsContent;
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: February 2026'**
+  String get lastUpdated;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About App'**
+  String get aboutApp;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'VigilTip is an intelligent tip calculator app that automatically recognizes receipt amounts through camera capture and provides three smart tip suggestions.'**
+  String get appDescription;
+
+  /// No description provided for @manualInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Input'**
+  String get manualInput;
+
+  /// No description provided for @enterBillAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Bill Amount'**
+  String get enterBillAmount;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @calculateTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate Tip'**
+  String get calculateTip;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @enterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get enterValidAmount;
+
+  /// No description provided for @algorithmExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithm Explanation'**
+  String get algorithmExplanation;
+
+  /// No description provided for @algorithmOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithm Overview'**
+  String get algorithmOverview;
+
+  /// No description provided for @algorithmOverviewContent.
+  ///
+  /// In en, this message translates to:
+  /// **'VigilTip uses a three-tier intelligent tip suggestion system that provides reasonable tip recommendations based on bill amount and service context. The algorithm is based on these principles: fairness, practicality, and cultural adaptability.'**
+  String get algorithmOverviewContent;
+
+  /// No description provided for @threeTierSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Three-Tier Suggestion System'**
+  String get threeTierSystem;
+
+  /// No description provided for @threeTierSystemContent.
+  ///
+  /// In en, this message translates to:
+  /// **'We provide three different tip suggestion tiers, each suitable for different scenarios and preferences:\n\n• Conservative suggestions: For budget-conscious or average service situations\n• Standard suggestions: For typical restaurant service quality\n• Generous suggestions: For excellent service or special occasions'**
+  String get threeTierSystemContent;
+
+  /// No description provided for @tier1Explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tier 1: Conservative Suggestions'**
+  String get tier1Explanation;
+
+  /// No description provided for @tier1ExplanationContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal: Provide economical tip options\n\nFeatures:\n• Typically under 10% rate\n• Prioritizes rounded payments\n• Suitable for small bills (usually under \$40)\n• Considers basic service costs\n\nUse cases:\n• Fast food, coffee shops\n• Average service quality\n• Budget-conscious situations'**
+  String get tier1ExplanationContent;
+
+  /// No description provided for @tier2Explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tier 2: Standard Suggestions'**
+  String get tier2Explanation;
+
+  /// No description provided for @tier2ExplanationContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal: Provide conventional standard tips\n\nFeatures:\n• Approximately 10% rate\n• Balanced consideration of service quality\n• Suitable for medium bill amounts\n• Uses reasonable rounding strategies\n\nUse cases:\n• Regular restaurant dining\n• Standard service quality\n• Everyday dining situations'**
+  String get tier2ExplanationContent;
+
+  /// No description provided for @tier3Explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tier 3: Generous Suggestions'**
+  String get tier3Explanation;
+
+  /// No description provided for @tier3ExplanationContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal: Provide tips that recognize excellent service\n\nFeatures:\n• Approximately 15% rate\n• Emphasizes service quality\n• Suitable for higher bill amounts\n• Reflects generous attitude\n\nUse cases:\n• Fine dining restaurants\n• Excellent service experiences\n• Special occasion celebrations'**
+  String get tier3ExplanationContent;
+
+  /// No description provided for @roundingRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounding Rules'**
+  String get roundingRules;
+
+  /// No description provided for @roundingRulesContent.
+  ///
+  /// In en, this message translates to:
+  /// **'To make tip amounts more practical, we use intelligent rounding strategies:\n\n• Small bills (<\$40): Round to whole numbers\n• Medium bills (\$40-\$100): Round to 5 or 0 endings\n• Large bills (>\$100): Round to 10 or 0 endings\n• Prioritizes ease of payment for total amount\n\nThese rules ensure tip totals are convenient for cash or electronic payments.'**
+  String get roundingRulesContent;
+
+  /// No description provided for @exampleCalculations.
+  ///
+  /// In en, this message translates to:
+  /// **'Example Calculations'**
+  String get exampleCalculations;
+
+  /// No description provided for @exampleCalculationsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Example 1: Bill \$25.50\n• Conservative: \$3.50 (13.8%, rounded to \$29)\n• Standard: \$5.50 (21.6%, rounded to \$31)\n• Generous: \$7.50 (29.4%, rounded to \$33)\n\nExample 2: Bill \$68.25\n• Conservative: \$8.75 (12.8%, rounded to \$77)\n• Standard: \$11.75 (17.2%, rounded to \$80)\n• Generous: \$16.75 (24.6%, rounded to \$85)\n\nExample 3: Bill \$125.00\n• Conservative: \$15.00 (12%, rounded to \$140)\n• Standard: \$25.00 (20%, rounded to \$150)\n• Generous: \$35.00 (28%, rounded to \$160)'**
+  String get exampleCalculationsContent;
+
+  /// No description provided for @transparencyCommitment.
+  ///
+  /// In en, this message translates to:
+  /// **'Transparency Commitment'**
+  String get transparencyCommitment;
+
+  /// No description provided for @transparencyCommitmentContent.
+  ///
+  /// In en, this message translates to:
+  /// **'We commit to complete algorithm transparency:\n\n• All calculation logic fully explained\n• No hidden complex rules\n• Welcome user feedback and suggestions\n• Continuously optimize algorithm fairness\n\nWe believe transparency builds user trust and makes every tipping decision more informed.'**
+  String get transparencyCommitmentContent;
+
+  /// No description provided for @whyTransparent.
+  ///
+  /// In en, this message translates to:
+  /// **'Why Choose Transparency?'**
+  String get whyTransparent;
+
+  /// No description provided for @whyTransparentContent.
+  ///
+  /// In en, this message translates to:
+  /// **'In the digital age, algorithm transparency is the foundation of user trust. We disclose our tip calculation logic because:\n\n• You have the right to know where suggestions come from\n• Transparency promotes algorithm fairness\n• Helps you make informed decisions\n• Builds long-term user trust\n\nVigilTip is committed to being your most trusted tip calculation partner.'**
+  String get whyTransparentContent;
+
+  /// No description provided for @recognizingReceiptContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognizing receipt content, please wait...'**
+  String get recognizingReceiptContent;
+
+  /// No description provided for @viewRawText.
+  ///
+  /// In en, this message translates to:
+  /// **'View Raw Recognized Text'**
+  String get viewRawText;
+
+  /// No description provided for @rawTextDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Display original text content from OCR recognition'**
+  String get rawTextDescription;
+
+  /// No description provided for @backToCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Camera'**
+  String get backToCamera;
+
+  /// No description provided for @linesOfText.
+  ///
+  /// In en, this message translates to:
+  /// **'lines of text'**
+  String get linesOfText;
+
+  /// No description provided for @manualInputAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Input Amount: \$'**
+  String get manualInputAmount;
+
+  /// No description provided for @retakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake Photo'**
+  String get retakePhoto;
+
+  /// No description provided for @ocrRecognitionResult.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR Recognition Result:'**
+  String get ocrRecognitionResult;
+
+  /// No description provided for @emptyLine.
+  ///
+  /// In en, this message translates to:
+  /// **'[Empty Line]'**
+  String get emptyLine;
+
+  /// No description provided for @billContainsServiceCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill Contains Service Charge'**
+  String get billContainsServiceCharge;
+
+  /// No description provided for @serviceChargeAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Charge Amount'**
+  String get serviceChargeAmount;
+
+  /// No description provided for @preTaxPercentage.
+  ///
+  /// In en, this message translates to:
+  /// **'% Pre-tax'**
+  String get preTaxPercentage;
+
+  /// No description provided for @totalPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Payment'**
+  String get totalPayment;
+
+  /// No description provided for @highTipAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'High Tip Amount'**
+  String get highTipAmount;
+
+  /// No description provided for @highTipWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'The lowest tip option exceeds \$20. Please check if the bill amount is correct, or consider manually entering the accurate amount.'**
+  String get highTipWarning;
 }
 
 class _AppLocalizationsDelegate

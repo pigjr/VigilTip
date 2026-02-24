@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "app.vigiltip.vigiltip"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,18 +20,27 @@ android {
     }
 
     defaultConfig {
-        applicationId = "app.vigiltip.vigiltip"
+        applicationId = "ca.lzhu.vigiltip"
         minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    
+    signingConfigs {
+        create("release") {
+            storeFile = file("../vigiltip-release.keystore")
+            storePassword = "vigiltip123"
+            keyAlias = "vigiltip"
+            keyPassword = "vigiltip123"
+        }
+    }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }

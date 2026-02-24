@@ -144,13 +144,14 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _submitManualAmount() {
+    final l10n = AppLocalizations.of(context)!;
     final amountText = _amountController.text.trim();
     if (amountText.isEmpty) return;
     
     final amount = double.tryParse(amountText);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('请输入有效的金额')),
+        SnackBar(content: Text(l10n.enterValidAmount)),
       );
       return;
     }
@@ -227,6 +228,11 @@ class _CameraPageState extends State<CameraPage> {
             onPressed: _pickImage,
             tooltip: l10n.pickImageFromGallery,
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.go('/settings'),
+            tooltip: l10n.settings,
+          ),
         ],
       ),
       body: Stack(
@@ -287,7 +293,7 @@ class _CameraPageState extends State<CameraPage> {
             FilledButton.icon(
               onPressed: _toggleManualInput,
               icon: const Icon(Icons.edit),
-              label: const Text('手动输入金额'),
+              label: Text(l10n.manualInput),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
@@ -301,6 +307,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Widget _buildManualInputSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(16),
@@ -312,7 +319,7 @@ class _CameraPageState extends State<CameraPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            '手动输入账单金额',
+            l10n.enterBillAmount,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -322,7 +329,7 @@ class _CameraPageState extends State<CameraPage> {
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: '金额',
+              labelText: l10n.amount,
               prefixText: '\$',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -337,14 +344,14 @@ class _CameraPageState extends State<CameraPage> {
                 child: FilledButton.icon(
                   onPressed: _submitManualAmount,
                   icon: const Icon(Icons.calculate),
-                  label: const Text('计算小费'),
+                  label: Text(l10n.calculateTip),
                 ),
               ),
               const SizedBox(width: 12),
               TextButton.icon(
                 onPressed: _toggleManualInput,
                 icon: const Icon(Icons.close),
-                label: const Text('取消'),
+                label: Text(l10n.cancel),
                 style: TextButton.styleFrom(foregroundColor: Colors.grey),
               ),
             ],

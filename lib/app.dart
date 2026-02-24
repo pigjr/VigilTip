@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'features/camera/camera_page.dart';
 import 'features/result/result_page.dart';
+import 'features/splash/splash_page.dart';
+import 'features/settings/settings_page.dart';
 import 'gen_l10n/app_localizations.dart';
 
 final _router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      builder: (_, __) => const SplashPage(),
+    ),
     GoRoute(
       path: '/',
       builder: (_, __) => const CameraPage(),
@@ -37,6 +44,10 @@ final _router = GoRouter(
         }
         return const _RedirectToScan();
       },
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (_, __) => const SettingsPage(),
     ),
   ],
 );

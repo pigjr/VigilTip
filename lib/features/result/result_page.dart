@@ -8,22 +8,6 @@ import '../../core/tip/tip_engine.dart';
 import '../../core/tip/tip_model.dart';
 import '../../gen_l10n/app_localizations.dart';
 
-/// Resolves tip reason key to localized string.
-String _tipReasonText(AppLocalizations l10n, String reasonKey) {
-  switch (reasonKey) {
-    case 'tipReasonLow':
-      return l10n.tipReasonLow;
-    case 'tipReasonMedium':
-      return l10n.tipReasonMedium;
-    case 'tipReasonHigh':
-      return l10n.tipReasonHigh;
-    case 'noTipReason':
-      return l10n.noTipReason;
-    default:
-      return reasonKey;
-  }
-}
-
 /// Resolves error key to localized string.
 String _errorText(AppLocalizations l10n, String errorKey) {
   switch (errorKey) {
@@ -69,6 +53,12 @@ class _ResultPageState extends State<ResultPage> {
   void dispose() {
     _ocr.dispose();
     super.dispose();
+  }
+
+  /// Handle back button press to navigate to home instead of exiting app
+  Future<bool> _onWillPop() async {
+    context.go('/');
+    return false; // Prevent default back behavior
   }
 
   Future<void> _process() async {
@@ -141,6 +131,7 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   void _processManualAmount(double amount) {
+    final l10n = AppLocalizations.of(context)!;
     debugPrint('Creating manual receipt data for amount: $amount');
     
     // Create a manual receipt with the entered amount as total
@@ -149,7 +140,7 @@ class _ResultPageState extends State<ResultPage> {
       tax: null,
       total: amount,
       hasGratuityOrServiceCharge: false,
-      rawLines: ['手动输入金额: \$$amount'],
+      rawLines: ['${l10n.manualInputAmount}\$$amount'],
     );
     
     // Calculate tip suggestions
@@ -177,6 +168,13 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: _buildContent(context, l10n),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, AppLocalizations l10n) {
     if (_loading) {
       return Scaffold(
         appBar: AppBar(
@@ -185,7 +183,7 @@ class _ResultPageState extends State<ResultPage> {
             TextButton.icon(
               onPressed: _cancelProcessing,
               icon: const Icon(Icons.cancel),
-              label: const Text('取消'),
+              label: Text(l10n.cancel),
               style: TextButton.styleFrom(foregroundColor: Colors.red),
             ),
           ],
@@ -198,15 +196,15 @@ class _ResultPageState extends State<ResultPage> {
               const SizedBox(height: 16),
               Text(l10n.recognizingReceipt),
               const SizedBox(height: 8),
-              const Text(
-                '正在识别账单内容，请稍候...',
+              Text(
+                l10n.recognizingReceiptContent,
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 24),
               TextButton.icon(
                 onPressed: _cancelProcessing,
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('返回拍照'),
+                label: Text(l10n.backToCamera),
                 style: TextButton.styleFrom(foregroundColor: Colors.grey),
               ),
             ],
@@ -231,7 +229,7 @@ class _ResultPageState extends State<ResultPage> {
                 FilledButton.icon(
                   onPressed: () => context.go('/'),
                   icon: const Icon(Icons.camera_alt),
-                  label: Text(l10n.retake),
+                  label: Text(l10n.retakePhoto),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
@@ -376,11 +374,11 @@ class _ReceiptSummary extends StatelessWidget {
               ExpansionTile(
                 leading: Icon(Icons.visibility, size: 20),
                 title: Text(
-                  '查看识别的原始文本',
+                  l10n.viewRawText,
                   style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
-                  '共 ${rawLines.length} 行文本',
+                  '${l10n.rawTextDescription} (${rawLines.length} ${l10n.linesOfText})',
                   style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
                 ),
                 tilePadding: EdgeInsets.zero,
@@ -398,7 +396,7 @@ class _ReceiptSummary extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'OCR 识别结果：',
+                          l10n.ocrRecognitionResult,
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: theme.colorScheme.onSurfaceVariant,
@@ -423,7 +421,7 @@ class _ReceiptSummary extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    line.isEmpty ? '[空行]' : line,
+                                    line.isEmpty ? l10n.emptyLine : line,
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       fontFamily: 'monospace',
                                       color: line.isEmpty 
@@ -500,7 +498,6 @@ class _NoTipCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text(_tipReasonText(l10n, reasonKey)),
             if (serviceChargeAmount != null) ...[
               const SizedBox(height: 12),
               Container(
@@ -525,7 +522,7 @@ class _NoTipCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          '账单已包含服务费',
+                          l10n.billContainsServiceCharge,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -545,7 +542,7 @@ class _NoTipCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '服务费金额',
+                            l10n.serviceChargeAmount,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.onPrimaryContainer,
                             ),
@@ -614,24 +611,11 @@ class _TipOptionsList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '${o.percentage}% 税前',
+                          '${o.percentage}${l10n.preTaxPercentage}',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                             fontWeight: FontWeight.w500,
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.info_outline, size: 16, color: Theme.of(context).colorScheme.outline),
-                      const SizedBox(width: 4),
-                      Text(
-                        _tipReasonText(l10n, o.reasonKey),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -648,7 +632,7 @@ class _TipOptionsList extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '总计支付',
+                          l10n.totalPayment,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -673,6 +657,7 @@ class _TipOptionsList extends StatelessWidget {
   }
 
   Widget _buildHighTipWarning(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
@@ -705,7 +690,7 @@ class _TipOptionsList extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '小费金额较高',
+                  l10n.highTipAmount,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.error,
                     fontWeight: FontWeight.bold,
@@ -716,7 +701,7 @@ class _TipOptionsList extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '最低档小费已超过 \$20，请检查账单金额是否正确，或考虑手动输入准确的金额。',
+            l10n.highTipWarning,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onErrorContainer,
               fontWeight: FontWeight.w500,
