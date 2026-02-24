@@ -265,7 +265,7 @@ abstract class AppLocalizations {
   /// No description provided for @suggestion.
   ///
   /// In en, this message translates to:
-  /// **'Suggestion'**
+  /// **'No tip needed'**
   String get suggestion;
 
   /// No description provided for @scanAnotherReceipt.

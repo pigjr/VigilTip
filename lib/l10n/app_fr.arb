@@ -41,7 +41,7 @@
   "total": "Total",
   "gratuityIncluded": "La note inclut déjà le pourboire ou le service",
   "tipSuggestionsBasedOnPreTax": "Suggestions de pourboire (sur base hors taxes)",
-  "suggestion": "Suggestion",
+  "suggestion": "Pas de pourboire",
   "scanAnotherReceipt": "Scanner une autre note",
   "noTipReason": "La note inclut déjà le pourboire ou le service ; pas besoin d'ajouter.",
   "tipReasonLow": "Environ 5% de pourboire, total arrondi",

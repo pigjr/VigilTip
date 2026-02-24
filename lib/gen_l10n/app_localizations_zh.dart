@@ -94,7 +94,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tipSuggestionsBasedOnPreTax => '小费建议（基于税前）';
 
   @override
-  String get suggestion => '建议';
+  String get suggestion => '无需小费';
 
   @override
   String get scanAnotherReceipt => '扫描另一张账单';

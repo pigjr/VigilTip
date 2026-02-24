@@ -157,7 +157,11 @@ class TipEngine {
     final rounded = current.round();
     
     // Ensure it's greater than current
-    return (rounded > current) ? rounded.toDouble() : (rounded + 1).toDouble();
+    if (rounded > current) {
+      return rounded.toDouble();
+    } else {
+      return (rounded + 1).toDouble();
+    }
   }
 
   /// Find the next nice total ending in 0 or 5

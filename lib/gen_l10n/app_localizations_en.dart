@@ -100,7 +100,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tip suggestions (based on pre-tax)';
 
   @override
-  String get suggestion => 'Suggestion';
+  String get suggestion => 'No tip needed';
 
   @override
   String get scanAnotherReceipt => 'Scan another receipt';

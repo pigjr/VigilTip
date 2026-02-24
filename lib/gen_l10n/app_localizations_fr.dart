@@ -102,7 +102,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Suggestions de pourboire (sur base hors taxes)';
 
   @override
-  String get suggestion => 'Suggestion';
+  String get suggestion => 'Pas de pourboire';
 
   @override
   String get scanAnotherReceipt => 'Scanner une autre note';

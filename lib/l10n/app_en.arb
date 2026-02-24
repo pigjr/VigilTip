@@ -41,7 +41,7 @@
   "total": "Total",
   "gratuityIncluded": "Bill already includes tip or service charge",
   "tipSuggestionsBasedOnPreTax": "Tip suggestions (based on pre-tax)",
-  "suggestion": "Suggestion",
+  "suggestion": "No tip needed",
   "scanAnotherReceipt": "Scan another receipt",
   "noTipReason": "Bill already includes tip or service charge; no need to add more.",
   "tipReasonLow": "About 5% tip, rounded total",

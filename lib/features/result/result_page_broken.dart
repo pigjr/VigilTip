@@ -110,26 +110,28 @@ class _ResultPageState extends State<ResultPage> {
       return;
     }
     
-    debugPrint('Parsing receipt from ${lines.length} lines');
+    debugPrint('Starting receipt parsing...');
     final receipt = _parser.parse(lines);
+    debugPrint('Parsed receipt: $receipt');
+    
+    debugPrint('Starting tip calculation...');
+    final tipResult = _tipEngine.compute(receipt);
+    debugPrint('Tip result: $tipResult');
     
     if (!mounted) return;
     if (_cancelled) {
-      debugPrint('Processing was cancelled');
+      debugPrint('Processing was cancelled after parsing');
       return;
     }
     
-    debugPrint('Parsed receipt: subtotal=${receipt.subtotal}, tax=${receipt.tax}, total=${receipt.total}');
-    debugPrint('Has gratuity: ${receipt.hasGratuityOrServiceCharge}');
-    
-    // Calculate tip suggestions
-    final tipResult = _tipEngine.compute(receipt);
-    
-    setState(() {
-      _loading = false;
-      _receipt = receipt;
-      _tipResult = tipResult;
-    });
+    if (!receipt.hasAmounts) {
+      debugPrint('No amounts found in receipt, setting amountNotRecognized error');
+      setState(() {
+        _loading = false;
+        _errorKey = 'amountNotRecognized';
+      });
+      return;
+    }
     
     debugPrint('Processing completed successfully');
     setState(() {
@@ -141,6 +143,7 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   void _processManualAmount(double amount) {
+    final l10n = AppLocalizations.of(context)!;
     debugPrint('Creating manual receipt data for amount: $amount');
     
     // Create a manual receipt with the entered amount as total
@@ -149,7 +152,7 @@ class _ResultPageState extends State<ResultPage> {
       tax: null,
       total: amount,
       hasGratuityOrServiceCharge: false,
-      rawLines: ['Manual Input Amount: \$${amount.toStringAsFixed(2)}'],
+      rawLines: ['${l10n.manualInputAmount}\$$amount'],
     );
     
     // Calculate tip suggestions
@@ -170,24 +173,33 @@ class _ResultPageState extends State<ResultPage> {
       _cancelled = true;
       _loading = false;
     });
+    context.go('/');
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(title: Text(l10n.tipSuggestions)),
-        body: _buildContent(context, l10n),
-      ),
+      child: _buildContent(context, l10n),
     );
   }
 
   Widget _buildContent(BuildContext context, AppLocalizations l10n) {
     if (_loading) {
       return Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.tipSuggestions),
+          actions: [
+            TextButton.icon(
+              onPressed: _cancelProcessing,
+              icon: const Icon(Icons.cancel),
+              label: Text(l10n.cancel),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+            ),
+          ],
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -201,13 +213,6 @@ class _ResultPageState extends State<ResultPage> {
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 24),
-              TextButton.icon(
-                onPressed: _cancelProcessing,
-                icon: const Icon(Icons.cancel),
-                label: Text(l10n.cancel),
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-              ),
-              const SizedBox(height: 8),
               TextButton.icon(
                 onPressed: _cancelProcessing,
                 icon: const Icon(Icons.arrow_back),
@@ -254,6 +259,7 @@ class _ResultPageState extends State<ResultPage> {
     final tipResult = _tipResult!;
 
     return Scaffold(
+      appBar: AppBar(title: Text(l10n.tipSuggestions)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -287,42 +293,57 @@ class _DisclaimerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    
-    return Card(
-      color: theme.colorScheme.surfaceContainerLow,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.errorContainer.withOpacity(0.8),
+            theme.colorScheme.errorContainer.withOpacity(0.6),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.error.withOpacity(0.3),
+          width: 2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: theme.colorScheme.error,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
                   l10n.disclaimerTitle,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.primary,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.disclaimerText,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
               ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.disclaimerText,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onErrorContainer,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -361,6 +382,77 @@ class _ReceiptSummary extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
                 ),
               ),
+            if (rawLines.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              ExpansionTile(
+                leading: Icon(Icons.visibility, size: 20),
+                title: Text(
+                  l10n.viewRawText,
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                ),
+                subtitle: Text(
+                  '${l10n.rawTextDescription} (${rawLines.length} ${l10n.linesOfText})',
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
+                ),
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.ocrRecognitionResult,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...rawLines.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final line = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${index + 1}:',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.outline,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    line.isEmpty ? l10n.emptyLine : line,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      fontFamily: 'monospace',
+                                      color: line.isEmpty 
+                                          ? theme.colorScheme.outline 
+                                          : theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -382,9 +474,9 @@ class _SummaryRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label),
+          Text(label, style: bold ? Theme.of(context).textTheme.titleSmall : null),
           Text(
-            '\$${value.toStringAsFixed(2)}',
+            r'$' + value.toStringAsFixed(2),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: bold ? FontWeight.bold : null,
                 ),
@@ -411,6 +503,13 @@ class _NoTipCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              children: [
+                Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(l10n.suggestion, style: Theme.of(context).textTheme.titleSmall),
+              ],
+            ),
             const SizedBox(height: 8),
             if (serviceChargeAmount != null) ...[
               const SizedBox(height: 12),
@@ -476,13 +575,6 @@ class _NoTipCard extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 12),
-            Text(
-              l10n.noTipReason,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
           ],
         ),
       ),
@@ -504,12 +596,73 @@ class _TipOptionsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(l10n.tipSuggestionsBasedOnPreTax, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         if (hasHighTipWarning) _buildHighTipWarning(context),
         ...options.map(
-          (o) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _TipOptionCard(option: o, baseAmount: baseAmount),
+          (o) => Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${o.amount.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${o.percentage}${l10n.preTaxPercentage}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.totalPayment,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          '\$${(baseAmount + o.amount).toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
@@ -568,100 +721,6 @@ class _TipOptionsList extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _TipOptionCard extends StatelessWidget {
-  const _TipOptionCard({required this.option, required this.baseAmount});
-
-  final TipOption option;
-  final double baseAmount;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final total = baseAmount + option.amount;
-    final percentage = ((option.amount / baseAmount) * 100).round();
-    
-    return Card(
-      child: InkWell(
-        onTap: () {
-          // TODO: Implement tip selection
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '\$${option.amount.toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                '${percentage}${l10n.preTaxPercentage}',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                l10n.totalPayment,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                              Text(
-                                '\$${total.toStringAsFixed(2)}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
