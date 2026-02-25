@@ -183,7 +183,7 @@ class _ResultPageState extends State<ResultPage> {
           title: Row(
             children: [
               Image.asset(
-                'assets/images/VigilTip1.png',
+                'assets/images/VigilTip2.png',
                 width: 32,
                 height: 32,
               ),

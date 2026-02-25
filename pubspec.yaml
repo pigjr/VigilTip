@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/images/app_icon.png
     - assets/images/VigilTip1.png
+    - assets/images/VigilTip2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

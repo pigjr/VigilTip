@@ -22,7 +22,7 @@ class SettingsPage extends StatelessWidget {
           title: Row(
             children: [
               Image.asset(
-                'assets/images/VigilTip1.png',
+                'assets/images/VigilTip2.png',
                 width: 32,
                 height: 32,
               ),
@@ -154,7 +154,7 @@ class SettingsPage extends StatelessWidget {
       applicationName: 'VigilTip',
       applicationVersion: '1.0.1',
       applicationIcon: Image.asset(
-        'assets/images/VigilTip1.png',
+        'assets/images/VigilTip2.png',
         width: 48,
         height: 48,
       ),
