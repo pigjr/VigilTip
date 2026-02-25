@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VigilTip - Privacy Policy</title>
+    <title>VigilTip - Privacy Policy | 隐私政策</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
@@ -47,78 +47,223 @@
             border-radius: 8px;
             margin-top: 20px;
         }
+        .language-switcher {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .language-switcher button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .language-switcher button:hover {
+            background: #2980b9;
+        }
+        .language-switcher button.active {
+            background: #2c3e50;
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .lang-zh {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>VigilTip - Privacy Policy</h1>
-        
-        <div class="highlight">
-            <strong>🔒 Privacy First:</strong> VigilTip processes all receipts locally on your device. We never store your receipt photos or upload personal data to the cloud.
+        <div class="language-switcher">
+            <button onclick="switchLanguage('en')" class="active" id="btn-en">English</button>
+            <button onclick="switchLanguage('zh')" id="btn-zh">中文</button>
         </div>
 
-        <h2>1. Information We Collect</h2>
-        <p>VigilTip is designed with privacy as our top priority. We collect minimal information necessary to provide our service:</p>
-        <ul>
-            <li><strong>Local Processing Only:</strong> All receipt images are processed locally on your device using AI technology</li>
-            <li><strong>No Cloud Storage:</strong> We never store your receipt photos, amounts, or personal information on our servers</li>
-            <li><strong>No Personal Data Collection:</strong> We do not collect, store, or transmit any personal information</li>
-        </ul>
+        <!-- English Content -->
+        <div id="content-en" class="lang-content active">
+            <h1>VigilTip - Privacy Policy</h1>
+            
+            <div class="highlight">
+                <strong>🔒 Privacy First:</strong> VigilTip processes all receipts locally on your device. We never store your receipt photos or upload personal data to the cloud.
+            </div>
 
-        <h2>2. How We Use Information</h2>
-        <p>Since all processing happens locally on your device:</p>
-        <ul>
-            <li>Receipt images are analyzed using on-device AI to extract amounts</li>
-            <li>Calculated tips are displayed to you immediately</li>
-            <li>No data is transmitted to external servers</li>
-            <li>No data is used for advertising or marketing purposes</li>
-        </ul>
-
-        <h2>3. Data Storage and Security</h2>
-        <p>Your data security is our priority:</p>
-        <ul>
-            <li><strong>Local Storage:</strong> All data remains on your device</li>
-            <li><strong>No Server Access:</strong> We have no access to your receipt images or calculations</li>
-            <li><strong>Automatic Cleanup:</strong> Temporary processing files are automatically deleted</li>
-            <li><strong>Encryption:</strong> Local data storage uses device encryption</li>
-        </ul>
-
-        <h2>4. Third-Party Services</h2>
-        <p>VigilTip does not use third-party services that access your personal data:</p>
-        <ul>
-            <li>No advertising networks</li>
-            <li>No analytics services that collect personal information</li>
-            <li>No cloud storage services</li>
-            <li>No third-party data processors</li>
-        </ul>
-
-        <h2>5. Children's Privacy</h2>
-        <p>VigilTip does not collect any personal information from anyone, including children under 13. Since all processing happens locally, there is no data collection that would require parental consent.</p>
-
-        <h2>6. Your Rights</h2>
-        <p>Since we don't collect your data:</p>
-        <ul>
-            <li>You have complete control over your data</li>
-            <li>You can delete the app at any time to remove all local data</li>
-            <li>You can disable optional analytics in settings</li>
-            <li>No data retention policies apply since we don't store your data</li>
-        </ul>
-
-        <h2>7. Changes to This Policy</h2>
-        <p>We may update this privacy policy occasionally. Any changes will be reflected in this page with an updated date. Since our app doesn't collect personal data, significant changes are unlikely.</p>
-
-        <h2>8. Contact Information</h2>
-        <div class="contact">
-            <p>If you have questions about this privacy policy or VigilTip's privacy practices:</p>
+            <h2>1. Information We Collect</h2>
+            <p>VigilTip is designed with privacy as our top priority. We collect minimal information necessary to provide our service:</p>
             <ul>
-                <li>App Store: Contact through the app store listing</li>
+                <li><strong>Local Processing Only:</strong> All receipt images are processed locally on your device using AI technology</li>
+                <li><strong>No Cloud Storage:</strong> We never store your receipt photos, amounts, or personal information on our servers</li>
+                <li><strong>No Personal Data Collection:</strong> We do not collect, store, or transmit any personal information</li>
             </ul>
+
+            <h2>2. How We Use Information</h2>
+            <p>Since all processing happens locally on your device:</p>
+            <ul>
+                <li>Receipt images are analyzed using on-device AI to extract amounts</li>
+                <li>Calculated tips are displayed to you immediately</li>
+                <li>No data is transmitted to external servers</li>
+                <li>No data is used for advertising or marketing purposes</li>
+            </ul>
+
+            <h2>3. Data Storage and Security</h2>
+            <p>Your data security is our priority:</p>
+            <ul>
+                <li><strong>Local Storage:</strong> All data remains on your device</li>
+                <li><strong>No Server Access:</strong> We have no access to your receipt images or calculations</li>
+                <li><strong>Automatic Cleanup:</strong> Temporary processing files are automatically deleted</li>
+                <li><strong>Encryption:</strong> Local data storage uses device encryption</li>
+            </ul>
+
+            <h2>4. Third-Party Services</h2>
+            <p>VigilTip does not use third-party services that access your personal data:</p>
+            <ul>
+                <li>No advertising networks</li>
+                <li>No analytics services that collect personal information</li>
+                <li>No cloud storage services</li>
+                <li>No third-party data processors</li>
+            </ul>
+
+            <h2>5. Children's Privacy</h2>
+            <p>VigilTip does not collect any personal information from anyone, including children under 13. Since all processing happens locally, there is no data collection that would require parental consent.</p>
+
+            <h2>6. Your Rights</h2>
+            <p>Since we don't collect your data:</p>
+            <ul>
+                <li>You have complete control over your data</li>
+                <li>You can delete the app at any time to remove all local data</li>
+                <li>You can disable optional analytics in settings</li>
+                <li>No data retention policies apply since we don't store your data</li>
+            </ul>
+
+            <h2>7. Changes to This Policy</h2>
+            <p>We may update this privacy policy occasionally. Any changes will be reflected in this page with an updated date. Since our app doesn't collect personal data, significant changes are unlikely.</p>
+
+            <h2>8. Contact Information</h2>
+            <div class="contact">
+                <p>If you have questions about this privacy policy or VigilTip's privacy practices:</p>
+                <ul>
+                    <li>App Store: Contact through the app store listing</li>
+                </ul>
+            </div>
+
+            <div class="date">
+                <p>Last updated: February 23, 2026</p>
+                <p>Effective date: February 23, 2026</p>
+            </div>
         </div>
 
-        <div class="date">
-            <p>Last updated: February 23, 2026</p>
-            <p>Effective date: February 23, 2026</p>
+        <!-- Chinese Content -->
+        <div id="content-zh" class="lang-content lang-zh">
+            <h1>VigilTip - 隐私政策</h1>
+            
+            <div class="highlight">
+                <strong>🔒 隐私优先：</strong> VigilTip在您的设备上本地处理所有收据。我们绝不存储您的收据照片或将个人数据上传到云端。
+            </div>
+
+            <h2>1. 我们收集的信息</h2>
+            <p>VigilTip以隐私为最高优先级设计。我们仅收集提供服务所需的最少信息：</p>
+            <ul>
+                <li><strong>仅本地处理：</strong> 所有收据图像都使用AI技术在您的设备上本地处理</li>
+                <li><strong>无云端存储：</strong> 我们绝不在服务器上存储您的收据照片、金额或个人信息</li>
+                <li><strong>无个人信息收集：</strong> 我们不收集、存储或传输任何个人信息</li>
+            </ul>
+
+            <h2>2. 信息使用方式</h2>
+            <p>由于所有处理都在您的设备上本地进行：</p>
+            <ul>
+                <li>收据图像通过设备AI分析以提取金额</li>
+                <li>计算的小费立即显示给您</li>
+                <li>无数据传输到外部服务器</li>
+                <li>无数据用于广告或营销目的</li>
+            </ul>
+
+            <h2>3. 数据存储和安全</h2>
+            <p>您的数据安全是我们的首要任务：</p>
+            <ul>
+                <li><strong>本地存储：</strong> 所有数据保留在您的设备上</li>
+                <li><strong>无服务器访问：</strong> 我们无法访问您的收据图像或计算结果</li>
+                <li><strong>自动清理：</strong> 临时处理文件会自动删除</li>
+                <li><strong>加密保护：</strong> 本地数据存储使用设备加密</li>
+            </ul>
+
+            <h2>4. 第三方服务</h2>
+            <p>VigilTip不使用访问您个人数据的第三方服务：</p>
+            <ul>
+                <li>无广告网络</li>
+                <li>无收集个人信息的分析服务</li>
+                <li>无云存储服务</li>
+                <li>无第三方数据处理商</li>
+            </ul>
+
+            <h2>5. 儿童隐私</h2>
+            <p>VigilTip不从任何人（包括13岁以下儿童）收集个人信息。由于所有处理都在本地进行，没有需要家长同意的数据收集。</p>
+
+            <h2>6. 您的权利</h2>
+            <p>由于我们不收集您的数据：</p>
+            <ul>
+                <li>您对数据拥有完全控制权</li>
+                <li>您可以随时删除应用以移除所有本地数据</li>
+                <li>您可以在设置中禁用可选分析</li>
+                <li>我们不存储您的数据，因此不适用数据保留政策</li>
+            </ul>
+
+            <h2>7. 政策变更</h2>
+            <p>我们可能会偶尔更新此隐私政策。任何变更都会在此页面反映并更新日期。由于我们的应用不收集个人信息，重大变更不太可能发生。</p>
+
+            <h2>8. 联系信息</h2>
+            <div class="contact">
+                <p>如果您对此隐私政策或VigilTip的隐私实践有疑问：</p>
+                <ul>
+                    <li>应用商店：通过应用商店列表联系</li>
+                </ul>
+            </div>
+
+            <div class="date">
+                <p>最后更新：2026年2月23日</p>
+                <p>生效日期：2026年2月23日</p>
+            </div>
         </div>
     </div>
+
+    <script>
+        function switchLanguage(lang) {
+            // Hide all content
+            document.querySelectorAll('.lang-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.language-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById('content-' + lang).classList.add('active');
+            document.getElementById('btn-' + lang).classList.add('active');
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            
+            // Update page title
+            document.title = lang === 'zh' ? 'VigilTip - 隐私政策' : 'VigilTip - Privacy Policy';
+            
+            // Save language preference
+            localStorage.setItem('preferred-language', lang);
+        }
+        
+        // Load saved language preference or detect browser language
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferred-language');
+            const browserLang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+            const defaultLang = savedLang || browserLang;
+            
+            switchLanguage(defaultLang);
+        });
+    </script>
 </body>
 </html>
