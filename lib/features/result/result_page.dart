@@ -179,7 +179,19 @@ class _ResultPageState extends State<ResultPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(title: Text(l10n.tipSuggestions)),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/VigilTip1.png',
+                width: 32,
+                height: 32,
+              ),
+              const SizedBox(width: 12),
+              Text(l10n.tipSuggestions),
+            ],
+          ),
+        ),
         body: _buildContent(context, l10n),
       ),
     );
@@ -222,7 +234,6 @@ class _ResultPageState extends State<ResultPage> {
 
     if (_errorKey != null) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.tipSuggestions)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),

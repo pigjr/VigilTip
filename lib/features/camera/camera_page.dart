@@ -206,7 +206,17 @@ class _CameraPageState extends State<CameraPage> {
     if (_controller == null || !_controller!.value.isInitialized) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(l10n.scanReceipt),
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/VigilTip1.png',
+                width: 32,
+                height: 32,
+              ),
+              const SizedBox(width: 12),
+              Text(l10n.scanReceipt),
+            ],
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.photo_library),
@@ -219,23 +229,38 @@ class _CameraPageState extends State<CameraPage> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.scanReceipt),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.photo_library),
-            onPressed: _pickImage,
-            tooltip: l10n.pickImageFromGallery,
+    return WillPopScope(
+      onWillPop: () async {
+        // 在首页按返回键时退出应用
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/VigilTip1.png',
+                width: 32,
+                height: 32,
+              ),
+              const SizedBox(width: 12),
+              Text(l10n.scanReceipt),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.go('/settings'),
-            tooltip: l10n.settings,
-          ),
-        ],
-      ),
-      body: Stack(
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.photo_library),
+              onPressed: _pickImage,
+              tooltip: l10n.pickImageFromGallery,
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => context.go('/settings'),
+              tooltip: l10n.settings,
+            ),
+          ],
+        ),
+        body: Stack(
         fit: StackFit.expand,
         children: [
           Center(
@@ -263,6 +288,7 @@ class _CameraPageState extends State<CameraPage> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

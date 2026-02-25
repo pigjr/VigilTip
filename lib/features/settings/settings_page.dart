@@ -19,7 +19,17 @@ class SettingsPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(l10n.settings),
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/VigilTip1.png',
+                width: 32,
+                height: 32,
+              ),
+              const SizedBox(width: 12),
+              Text(l10n.settings),
+            ],
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
         ),
@@ -142,11 +152,11 @@ class SettingsPage extends StatelessWidget {
     showAboutDialog(
       context: context,
       applicationName: 'VigilTip',
-      applicationVersion: '1.0.0',
-      applicationIcon: const Icon(
-        Icons.calculate_outlined,
-        size: 48,
-        color: Color(0xFF00897B),
+      applicationVersion: '1.0.1',
+      applicationIcon: Image.asset(
+        'assets/images/VigilTip1.png',
+        width: 48,
+        height: 48,
       ),
       children: [
         Text(l10n.appDescription),
