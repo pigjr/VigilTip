@@ -338,12 +338,4 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get decline => 'Refuser';
-
-  @override
-  String get privacyPolicyRequired =>
-      'Vous devez accepter la Politique de Confidentialité pour utiliser VigilTip.';
-
-  @override
-  String get privacyPolicyUrl =>
-      'https://pigjr.github.io/VigilTip/privacy_policy.html';
 }

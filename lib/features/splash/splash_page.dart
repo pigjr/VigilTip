@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../gen_l10n/app_localizations.dart';
+import '../privacy/privacy_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -82,7 +82,7 @@ class _SplashPageState extends State<SplashPage>
               Text(l10n.privacyPolicyDialogMessage),
               const SizedBox(height: 16),
               GestureDetector(
-                onTap: () => _launchPrivacyPolicy(),
+                onTap: () => _navigateToPrivacyPage(),
                 child: Text(
                   l10n.readPrivacyPolicy,
                   style: TextStyle(
@@ -108,22 +108,17 @@ class _SplashPageState extends State<SplashPage>
     );
   }
 
-  void _launchPrivacyPolicy() async {
-    final l10n = AppLocalizations.of(context)!;
-    final uri = Uri.parse(l10n.privacyPolicyUrl);
-    
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
-    } catch (e) {
-      // 如果无法打开链接，显示错误信息
+  void _navigateToPrivacyPage() {
+    Navigator.of(context).pop(); // 关闭弹窗
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PrivacyPage()),
+    ).then((_) {
+      // 从隐私页面返回后，重新显示弹窗
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open privacy policy URL')),
-        );
+        _showPrivacyPolicyDialog();
       }
-    }
+    });
   }
 
   void _handlePrivacyPolicyAccept() async {
@@ -139,28 +134,9 @@ class _SplashPageState extends State<SplashPage>
     }
   }
 
-  void _handlePrivacyPolicyDecline() {
-    final l10n = AppLocalizations.of(context)!;
-    
-    // 显示拒绝提示
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.privacyPolicyTitle),
-          content: Text(l10n.privacyPolicyRequired),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 关闭提示弹窗
-                _showPrivacyPolicyDialog(); // 重新显示隐私政策弹窗
-              },
-              child: Text(l10n.accept),
-            ),
-          ],
-        );
-      },
-    );
+  void _handlePrivacyPolicyDecline() async {
+    // 用户拒绝，直接退出应用
+    SystemNavigator.pop(); // 退出应用
   }
 
   void _navigateToHome() async {

@@ -323,11 +323,4 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get decline => '拒绝';
-
-  @override
-  String get privacyPolicyRequired => '您必须接受隐私政策才能使用 VigilTip。';
-
-  @override
-  String get privacyPolicyUrl =>
-      'https://pigjr.github.io/VigilTip/privacy_policy.html';
 }

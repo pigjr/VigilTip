@@ -113,7 +113,5 @@
   "privacyPolicyDialogMessage": "欢迎使用 VigilTip！在使用我们的应用之前，请阅读我们的隐私政策，了解我们如何保护您的数据。",
   "readPrivacyPolicy": "阅读隐私政策",
   "accept": "接受并继续",
-  "decline": "拒绝",
-  "privacyPolicyRequired": "您必须接受隐私政策才能使用 VigilTip。",
-  "privacyPolicyUrl": "https://pigjr.github.io/VigilTip/privacy_policy.html"
+  "decline": "拒绝"
 }

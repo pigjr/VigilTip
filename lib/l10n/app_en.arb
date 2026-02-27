@@ -113,7 +113,5 @@
   "privacyPolicyDialogMessage": "Welcome to VigilTip! Before using our app, please read our Privacy Policy to understand how we protect your data.",
   "readPrivacyPolicy": "Read Privacy Policy",
   "accept": "Accept & Continue",
-  "decline": "Decline",
-  "privacyPolicyRequired": "You must accept the Privacy Policy to use VigilTip.",
-  "privacyPolicyUrl": "https://pigjr.github.io/VigilTip/privacy_policy.html"
+  "decline": "Decline"
 }

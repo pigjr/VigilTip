@@ -693,18 +693,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Decline'**
   String get decline;
-
-  /// No description provided for @privacyPolicyRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'You must accept the Privacy Policy to use VigilTip.'**
-  String get privacyPolicyRequired;
-
-  /// No description provided for @privacyPolicyUrl.
-  ///
-  /// In en, this message translates to:
-  /// **'https://pigjr.github.io/VigilTip/privacy_policy.html'**
-  String get privacyPolicyUrl;
 }
 
 class _AppLocalizationsDelegate
