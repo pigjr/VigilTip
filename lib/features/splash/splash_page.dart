@@ -73,43 +73,48 @@ class _SplashPageState extends State<SplashPage>
       context: context,
       barrierDismissible: false, // 防止用户点击外部关闭
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.privacyPolicyTitle),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.privacyPolicyDialogMessage),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () => _navigateToPrivacyPage(),
-                child: Text(
-                  l10n.readPrivacyPolicy,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    decoration: TextDecoration.underline,
+        return WillPopScope(
+          onWillPop: () async {
+            // 防止用户通过返回手势关闭弹窗
+            return false;
+          },
+          child: AlertDialog(
+            title: Text(l10n.privacyPolicyTitle),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.privacyPolicyDialogMessage),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () => _navigateToPrivacyPage(),
+                  child: Text(
+                    l10n.readPrivacyPolicy,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => _handlePrivacyPolicyDecline(),
+                child: Text(l10n.decline),
+              ),
+              TextButton(
+                onPressed: () => _handlePrivacyPolicyAccept(),
+                child: Text(l10n.accept),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => _handlePrivacyPolicyDecline(),
-              child: Text(l10n.decline),
-            ),
-            TextButton(
-              onPressed: () => _handlePrivacyPolicyAccept(),
-              child: Text(l10n.accept),
-            ),
-          ],
         );
       },
     );
   }
 
   void _navigateToPrivacyPage() {
-    Navigator.of(context).pop(); // 关闭弹窗
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const PrivacyPage()),
