@@ -156,7 +156,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get contactUsContent =>
-      '如有隐私相关问题，请通过以下方式联系我们：\n\n• 邮箱：privacy@vigiltip.app\n• 应用内反馈：设置页面\n\n我们会在收到您的询问后尽快回复。';
+      '如有隐私相关问题，请通过以下方式联系我们：\n\n• 应用商店：通过应用商店列表联系\n• 应用内反馈：设置页面\n\n我们会在收到您的询问后尽快回复。';
 
   @override
   String get lastUpdated => '最后更新：2026年2月';

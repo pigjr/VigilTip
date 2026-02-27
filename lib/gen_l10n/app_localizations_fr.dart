@@ -166,7 +166,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get contactUsContent =>
-      'Pour les questions relatives à la confidentialité, veuillez nous contacter par :\n\n• Email : privacy@vigiltip.app\n• Commentaires dans l\'application : Page des paramètres\n\nNous répondrons à vos demandes dès que possible.';
+      'Pour les questions relatives à la confidentialité, veuillez nous contacter par :\n\n• App Store : Contactez via la liste de l\'app store\n• Commentaires dans l\'application : Page des paramètres\n\nNous répondrons à vos demandes dès que possible.';
 
   @override
   String get lastUpdated => 'Dernière mise à jour : février2026';

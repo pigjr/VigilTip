@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @contactUsContent.
   ///
   /// In en, this message translates to:
-  /// **'For privacy-related questions, please contact us through:\n\n• Email: privacy@vigiltip.app\n• In-app feedback: Settings page\n\nWe will respond to your inquiries as soon as possible.'**
+  /// **'For privacy-related questions, please contact us through:\n\n• App Store: Contact through the app store listing\n• In-app feedback: Settings page\n\nWe will respond to your inquiries as soon as possible.'**
   String get contactUsContent;
 
   /// No description provided for @lastUpdated.
