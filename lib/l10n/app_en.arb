@@ -108,5 +108,12 @@
   "preTaxPercentage": "% Pre-tax",
   "totalPayment": "Total Payment",
   "highTipAmount": "High Tip Amount",
-  "highTipWarning": "The lowest tip option exceeds $20. Please check if the bill amount is correct, or consider manually entering the accurate amount."
+  "highTipWarning": "The lowest tip option exceeds $20. Please check if the bill amount is correct, or consider manually entering the accurate amount.",
+  "privacyPolicyTitle": "Privacy Policy",
+  "privacyPolicyDialogMessage": "Welcome to VigilTip! Before using our app, please read our Privacy Policy to understand how we protect your data.",
+  "readPrivacyPolicy": "Read Privacy Policy",
+  "accept": "Accept & Continue",
+  "decline": "Decline",
+  "privacyPolicyRequired": "You must accept the Privacy Policy to use VigilTip.",
+  "privacyPolicyUrl": "https://pigjr.github.io/VigilTip/privacy_policy.html"
 }

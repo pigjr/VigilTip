@@ -322,4 +322,28 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get highTipWarning =>
       'L\'option de pourboire la plus basse dépasse 20\$. Veuillez vérifier si le montant de la facture est correct, ou envisagez de saisir manuellement le montant exact.';
+
+  @override
+  String get privacyPolicyTitle => 'Politique de Confidentialité';
+
+  @override
+  String get privacyPolicyDialogMessage =>
+      'Bienvenue dans VigilTip ! Avant d\'utiliser notre application, veuillez lire notre Politique de Confidentialité pour comprendre comment nous protégeons vos données.';
+
+  @override
+  String get readPrivacyPolicy => 'Lire la Politique de Confidentialité';
+
+  @override
+  String get accept => 'Accepter et Continuer';
+
+  @override
+  String get decline => 'Refuser';
+
+  @override
+  String get privacyPolicyRequired =>
+      'Vous devez accepter la Politique de Confidentialité pour utiliser VigilTip.';
+
+  @override
+  String get privacyPolicyUrl =>
+      'https://pigjr.github.io/VigilTip/privacy_policy.html';
 }

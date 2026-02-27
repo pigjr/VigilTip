@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../gen_l10n/app_localizations.dart';
 
@@ -41,8 +43,124 @@ class _SplashPageState extends State<SplashPage>
 
     _animationController.forward();
 
-    // 3秒后自动跳转到主页
-    _navigateToHome();
+    // 检查隐私政策同意状态
+    _checkPrivacyPolicyAndNavigate();
+  }
+
+  void _checkPrivacyPolicyAndNavigate() async {
+    await Future.delayed(const Duration(seconds: 2));
+    
+    if (mounted) {
+      final prefs = await SharedPreferences.getInstance();
+      final hasAcceptedPrivacyPolicy = prefs.getBool('has_accepted_privacy_policy') ?? false;
+      
+      if (hasAcceptedPrivacyPolicy) {
+        // 用户已同意，直接导航到主页
+        if (mounted) {
+          context.go('/');
+        }
+      } else {
+        // 用户未同意，显示隐私政策弹窗
+        _showPrivacyPolicyDialog();
+      }
+    }
+  }
+
+  void _showPrivacyPolicyDialog() {
+    final l10n = AppLocalizations.of(context)!;
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false, // 防止用户点击外部关闭
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.privacyPolicyTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.privacyPolicyDialogMessage),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _launchPrivacyPolicy(),
+                child: Text(
+                  l10n.readPrivacyPolicy,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => _handlePrivacyPolicyDecline(),
+              child: Text(l10n.decline),
+            ),
+            TextButton(
+              onPressed: () => _handlePrivacyPolicyAccept(),
+              child: Text(l10n.accept),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _launchPrivacyPolicy() async {
+    final l10n = AppLocalizations.of(context)!;
+    final uri = Uri.parse(l10n.privacyPolicyUrl);
+    
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      // 如果无法打开链接，显示错误信息
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open privacy policy URL')),
+        );
+      }
+    }
+  }
+
+  void _handlePrivacyPolicyAccept() async {
+    Navigator.of(context).pop(); // 关闭弹窗
+    
+    // 保存用户同意状态
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_accepted_privacy_policy', true);
+    
+    // 导航到主页
+    if (mounted) {
+      context.go('/');
+    }
+  }
+
+  void _handlePrivacyPolicyDecline() {
+    final l10n = AppLocalizations.of(context)!;
+    
+    // 显示拒绝提示
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.privacyPolicyTitle),
+          content: Text(l10n.privacyPolicyRequired),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 关闭提示弹窗
+                _showPrivacyPolicyDialog(); // 重新显示隐私政策弹窗
+              },
+              child: Text(l10n.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _navigateToHome() async {

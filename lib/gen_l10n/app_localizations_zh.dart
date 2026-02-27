@@ -307,4 +307,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get highTipWarning => '最低档小费已超过 \$20，请检查账单金额是否正确，或考虑手动输入准确的金额。';
+
+  @override
+  String get privacyPolicyTitle => '隐私政策';
+
+  @override
+  String get privacyPolicyDialogMessage =>
+      '欢迎使用 VigilTip！在使用我们的应用之前，请阅读我们的隐私政策，了解我们如何保护您的数据。';
+
+  @override
+  String get readPrivacyPolicy => '阅读隐私政策';
+
+  @override
+  String get accept => '接受并继续';
+
+  @override
+  String get decline => '拒绝';
+
+  @override
+  String get privacyPolicyRequired => '您必须接受隐私政策才能使用 VigilTip。';
+
+  @override
+  String get privacyPolicyUrl =>
+      'https://pigjr.github.io/VigilTip/privacy_policy.html';
 }

@@ -319,4 +319,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get highTipWarning =>
       'The lowest tip option exceeds \$20. Please check if the bill amount is correct, or consider manually entering the accurate amount.';
+
+  @override
+  String get privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get privacyPolicyDialogMessage =>
+      'Welcome to VigilTip! Before using our app, please read our Privacy Policy to understand how we protect your data.';
+
+  @override
+  String get readPrivacyPolicy => 'Read Privacy Policy';
+
+  @override
+  String get accept => 'Accept & Continue';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get privacyPolicyRequired =>
+      'You must accept the Privacy Policy to use VigilTip.';
+
+  @override
+  String get privacyPolicyUrl =>
+      'https://pigjr.github.io/VigilTip/privacy_policy.html';
 }
